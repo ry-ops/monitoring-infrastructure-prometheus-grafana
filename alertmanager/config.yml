@@ -1,0 +1,89 @@
+global:
+  resolve_timeout: 5m
+  # SMTP configuration for email alerts
+  # smtp_smarthost: 'smtp.gmail.com:587'
+  # smtp_from: 'alertmanager@example.com'
+  # smtp_auth_username: 'your-email@gmail.com'
+  # smtp_auth_password: 'your-app-password'
+
+# Templates for notification messages
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'
+
+# Root route
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 12h
+  receiver: 'default'
+
+  routes:
+    # Critical alerts - immediate notification
+    - match:
+        severity: critical
+      receiver: 'critical'
+      group_wait: 10s
+      repeat_interval: 5m
+
+    # Warning alerts - less urgent
+    - match:
+        severity: warning
+      receiver: 'warning'
+      group_wait: 30s
+      repeat_interval: 1h
+
+# Receivers define notification endpoints
+receivers:
+  - name: 'default'
+    # Default receiver - logs only for now
+    # Add your notification methods below
+
+  - name: 'critical'
+    # Email example (uncomment and configure)
+    # email_configs:
+    #   - to: 'ops-team@example.com'
+    #     headers:
+    #       Subject: '[CRITICAL] {{ .GroupLabels.alertname }}'
+
+    # Slack example (uncomment and configure)
+    # slack_configs:
+    #   - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+    #     channel: '#alerts-critical'
+    #     title: 'Critical Alert'
+    #     text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+
+    # PagerDuty example (uncomment and configure)
+    # pagerduty_configs:
+    #   - service_key: 'your-service-key'
+    #     description: '{{ .GroupLabels.alertname }}'
+
+  - name: 'warning'
+    # Email example
+    # email_configs:
+    #   - to: 'dev-team@example.com'
+    #     headers:
+    #       Subject: '[WARNING] {{ .GroupLabels.alertname }}'
+
+    # Slack example
+    # slack_configs:
+    #   - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+    #     channel: '#alerts-warning'
+    #     title: 'Warning Alert'
+    #     text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+
+# Inhibition rules to prevent alert fatigue
+inhibit_rules:
+  # Inhibit warning if critical alert is firing
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'instance']
+
+  # If instance is down, don't alert on its metrics
+  - source_match:
+      alertname: 'InstanceDown'
+    target_match_re:
+      alertname: '(HighCPU|HighMemory|DiskSpace).*'
+    equal: ['instance']

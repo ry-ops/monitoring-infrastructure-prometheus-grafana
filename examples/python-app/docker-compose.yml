@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  python-app:
+    build: .
+    container_name: python-metrics-app
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    external: true
+    name: monitoring-infrastructure-prometheus-grafana_monitoring

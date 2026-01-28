@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  node-app:
+    build: .
+    container_name: node-metrics-app
+    ports:
+      - "8001:8001"
+    restart: unless-stopped
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    external: true
+    name: monitoring-infrastructure-prometheus-grafana_monitoring

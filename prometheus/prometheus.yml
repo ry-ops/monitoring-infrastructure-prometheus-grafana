@@ -1,0 +1,57 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'local'
+    environment: 'development'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - "alerts.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+
+  # Node Exporter - System metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          service: 'node-exporter'
+          instance: 'local-machine'
+
+  # cAdvisor - Container metrics
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels:
+          service: 'cadvisor'
+
+  # Example application endpoints
+  # Uncomment and modify for your applications
+  # - job_name: 'my-app'
+  #   static_configs:
+  #     - targets: ['my-app:8000']
+  #       labels:
+  #         service: 'my-app'
+  #         environment: 'production'
+
+  # File-based service discovery
+  # - job_name: 'services'
+  #   file_sd_configs:
+  #     - files:
+  #         - '/etc/prometheus/targets/*.yml'
+  #       refresh_interval: 5m
