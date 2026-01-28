@@ -1,5 +1,9 @@
 # Monitoring Infrastructure with Prometheus & Grafana
 
+<p align="center">
+  <img src="hero.svg" alt="Monitoring Infrastructure with Prometheus & Grafana" width="100%">
+</p>
+
 A production-ready monitoring stack using Prometheus for metrics collection and Grafana for visualization. This project provides a complete setup for monitoring your infrastructure, applications, and services.
 
 ## Features
