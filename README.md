@@ -1,180 +1,133 @@
-# Monitoring Infrastructure with Prometheus & Grafana
-
 <p align="center">
-  <img src="hero.svg" alt="Monitoring Infrastructure with Prometheus & Grafana" width="100%">
+  <img src="hero.svg" width="100%" alt="Your apps expose a /metrics endpoint, Prometheus scrapes them on a schedule, Grafana charts the data, and Alertmanager fires a HighCPU alert.">
 </p>
 
-A production-ready monitoring stack using Prometheus for metrics collection and Grafana for visualization. This project provides a complete setup for monitoring your infrastructure, applications, and services.
+<h1 align="center">Monitoring Infrastructure — Prometheus &amp; Grafana</h1>
 
-## Features
+<p align="center"><b>Scrape metrics, chart them, and get alerted.</b> A production-ready monitoring stack you can bring up with one command — Prometheus, Grafana and Alertmanager, pre-wired, with a dashboard and two example apps to learn from.</p>
 
-- **Prometheus**: Time-series database and monitoring system
-- **Grafana**: Powerful visualization and analytics platform
-- **Node Exporter**: Hardware and OS metrics collector
-- **cAdvisor**: Container metrics analyzer
-- **Alert Manager**: Alert handling and routing
-- **Pre-configured Dashboards**: Ready-to-use monitoring dashboards
+<p align="center">
+  <img src="https://img.shields.io/badge/Prometheus-metrics-e6522c?logo=prometheus&logoColor=white" alt="Prometheus">
+  <img src="https://img.shields.io/badge/Grafana-dashboards-f46800?logo=grafana&logoColor=white" alt="Grafana">
+  <img src="https://img.shields.io/badge/Docker-compose-2496ed?logo=docker&logoColor=white" alt="Docker Compose">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-8b96ad" alt="MIT"></a>
+</p>
 
-## Prerequisites
+---
 
-- Docker and Docker Compose installed
-- Basic understanding of monitoring concepts
-- At least 2GB of available RAM
+## The idea
 
-## Quick Start
+Instrument your apps to expose a `/metrics` endpoint. **Prometheus** scrapes those endpoints on a schedule, stores the numbers as time-series, and evaluates alert rules against them. **Grafana** charts the data, and **Alertmanager** routes any firing alerts to your inbox or chat. This repo wires all three together so you can see it working in minutes, then point it at your own services.
 
-1. Clone this repository:
+## What `docker compose up` brings up
+
+<p align="center">
+  <img src="docs/stack.svg" width="100%" alt="Three services — Prometheus on 9090, Alertmanager on 9093, Grafana on 3000 — plus example node and python apps that expose /metrics, with prometheus.yml, alert rules, the Grafana datasource and dashboards provisioned from the repo.">
+</p>
+
+| Service | Port | What it does |
+|---|---|---|
+| **Prometheus** | `9090` | scrapes targets, stores time-series, evaluates alert rules |
+| **Grafana** | `3000` | dashboards over the data — datasource + panels provisioned |
+| **Alertmanager** | `9093` | routes and dedupes firing alerts to your receivers |
+| **Node Exporter** | — | hardware and OS metrics |
+| **cAdvisor** | — | per-container metrics |
+
+## Quick start
+
 ```bash
 git clone https://github.com/ry-ops/monitoring-infrastructure-prometheus-grafana.git
 cd monitoring-infrastructure-prometheus-grafana
+
+docker compose up -d
 ```
 
-2. Start the monitoring stack:
-```bash
-docker-compose up -d
+Then open:
+
+- **Grafana** — http://localhost:3000 (`admin` / `admin` — change it on first login)
+- **Prometheus** — http://localhost:9090
+- **Alertmanager** — http://localhost:9093
+
+The datasource and a **system-overview** dashboard are provisioned automatically, so Grafana has data the moment it starts.
+
+**Prerequisites:** Docker + Docker Compose, and ~2GB RAM to spare.
+
+## Project layout
+
+```
+docker-compose.yml
+prometheus/
+  prometheus.yml          # scrape targets
+  alerts.yml              # alert rules (high CPU/memory, service down, low disk)
+grafana/
+  provisioning/
+    datasources/          # points Grafana at Prometheus
+    dashboards/           # auto-loads the dashboards below
+  dashboards/             # system-overview.json
+alertmanager/
+  config.yml              # routing + receivers
+examples/
+  node-app/               # Node app exposing /metrics (prom-client)
+  python-app/             # Python app exposing /metrics (prometheus_client)
 ```
 
-3. Access the services:
-   - Grafana: http://localhost:3000 (default credentials: admin/admin)
-   - Prometheus: http://localhost:9090
-   - AlertManager: http://localhost:9093
+## Monitor your own app
 
-## Project Structure
+Point Prometheus at your service by adding a scrape target in `prometheus/prometheus.yml`:
 
-```
-.
-├── README.md
-├── LICENSE
-├── docker-compose.yml
-├── prometheus/
-│   ├── prometheus.yml          # Prometheus configuration
-│   ├── alerts.yml              # Alert rules
-│   └── targets/                # Service discovery configs
-├── grafana/
-│   ├── provisioning/
-│   │   ├── dashboards/         # Dashboard definitions
-│   │   └── datasources/        # Data source configs
-│   └── dashboards/             # JSON dashboard files
-├── alertmanager/
-│   └── config.yml              # AlertManager configuration
-├── examples/
-│   ├── python-app/             # Example Python app with metrics
-│   └── node-app/               # Example Node.js app with metrics
-└── documentation/
-    ├── SETUP.md                # Detailed setup guide
-    ├── DASHBOARDS.md           # Dashboard documentation
-    └── TROUBLESHOOTING.md      # Common issues and solutions
+```yaml
+scrape_configs:
+  - job_name: my-app
+    static_configs:
+      - targets: ["my-app:8080"]   # host:port exposing /metrics
 ```
 
-## Configuration
+…then instrument the app to expose metrics. The example apps show the pattern end to end:
 
-### Prometheus Targets
-
-Edit `prometheus/prometheus.yml` to add your services for monitoring. The default configuration monitors:
-- Prometheus itself
-- Node Exporter (system metrics)
-- cAdvisor (container metrics)
-
-### Grafana Dashboards
-
-Dashboards are automatically provisioned on startup. To add custom dashboards:
-1. Create your dashboard in Grafana UI
-2. Export as JSON
-3. Save to `grafana/dashboards/`
-4. Restart Grafana
-
-### Alert Rules
-
-Configure alerts in `prometheus/alerts.yml`. Example alerts are included for:
-- High CPU usage
-- High memory usage
-- Service down
-- Disk space low
-
-## Example Applications
-
-Two example applications with Prometheus metrics are included:
-
-### Python Application
-```bash
-cd examples/python-app
-docker-compose up -d
-```
-
-### Node.js Application
-```bash
-cd examples/node-app
-docker-compose up -d
-```
-
-Both apps expose metrics at `/metrics` endpoint and demonstrate best practices for application instrumentation.
-
-## Monitoring Your Own Applications
-
-### Python (using prometheus-client)
 ```python
+# Python — prometheus_client
 from prometheus_client import Counter, Histogram, generate_latest
-
-request_count = Counter('app_requests_total', 'Total requests')
-request_duration = Histogram('app_request_duration_seconds', 'Request duration')
+request_count = Counter("app_requests_total", "Total requests")
+request_duration = Histogram("app_request_duration_seconds", "Request duration")
 ```
 
-### Node.js (using prom-client)
 ```javascript
-const client = require('prom-client');
-const counter = new client.Counter({
-  name: 'app_requests_total',
-  help: 'Total requests'
-});
+// Node.js — prom-client
+const client = require("prom-client");
+const counter = new client.Counter({ name: "app_requests_total", help: "Total requests" });
 ```
 
-## Data Retention
+Run either example on its own with `docker compose up -d` from inside `examples/node-app/` or `examples/python-app/`.
 
-Default retention period is 15 days. To modify:
-1. Edit `docker-compose.yml`
-2. Update Prometheus command args: `--storage.tsdb.retention.time=30d`
+## Alerts
 
-## Security Considerations
+Rules live in `prometheus/alerts.yml` — high CPU, high memory, service down and low disk are included out of the box. When a rule fires, Prometheus hands it to Alertmanager, which dedupes and routes it to the receivers you configure in `alertmanager/config.yml`.
 
-For production deployments:
-- Change default Grafana credentials immediately
-- Enable HTTPS/TLS
-- Configure authentication (LDAP, OAuth, etc.)
-- Set up proper network isolation
-- Use secrets management for sensitive configs
-- Enable Grafana authentication and authorization
+## Data retention
 
-## Troubleshooting
+Prometheus keeps 15 days by default. To change it, edit the Prometheus command in `docker-compose.yml`:
 
-See [documentation/TROUBLESHOOTING.md](documentation/TROUBLESHOOTING.md) for common issues and solutions.
+```yaml
+--storage.tsdb.retention.time=30d
+```
 
-## Documentation
+## Before production
 
-- [Detailed Setup Guide](documentation/SETUP.md)
-- [Dashboard Guide](documentation/DASHBOARDS.md)
+- Change the default Grafana password immediately.
+- Put TLS in front of all three UIs and wire up real auth (OAuth, LDAP, …).
+- Isolate the stack on its own network and keep the ports off the public internet.
+- Move any secrets out of the config files into a secrets manager.
+
+## Docs
+
+- [Setup guide](documentation/SETUP.md)
+- [Dashboard guide](documentation/DASHBOARDS.md)
 - [Troubleshooting](documentation/TROUBLESHOOTING.md)
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+- Upstream: [Prometheus](https://prometheus.io/docs/) · [Grafana](https://grafana.com/docs/) · [PromQL](https://prometheus.io/docs/prometheus/latest/querying/basics/)
 
 ## License
 
-MIT License - see LICENSE file for details
-
-## Resources
-
-- [Prometheus Documentation](https://prometheus.io/docs/)
-- [Grafana Documentation](https://grafana.com/docs/)
-- [PromQL Guide](https://prometheus.io/docs/prometheus/latest/querying/basics/)
-- [Best Practices](https://prometheus.io/docs/practices/)
-
-## Support
-
-For issues and questions:
-- Check the [Troubleshooting Guide](documentation/TROUBLESHOOTING.md)
-- Open an issue on GitHub
-- Review the official Prometheus and Grafana documentation
+MIT. See [LICENSE](LICENSE).
 
 <!-- org-footer -->
 ---

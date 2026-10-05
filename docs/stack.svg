@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" width="960" height="400" role="img" aria-labelledby="t d">
+  <title id="t">What docker compose up brings up</title>
+  <desc id="d">The stack is three services — Prometheus on 9090, Alertmanager on 9093 and Grafana on 3000 — plus two example apps that expose metrics. Prometheus config, alert rules, the Grafana datasource and a system-overview dashboard are all provisioned from the repo.</desc>
+  <defs><linearGradient id="title" x1="0" x2="1"><stop offset="0" stop-color="#e6522c"/><stop offset="1" stop-color="#f46800"/></linearGradient></defs>
+  <style>
+    text { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; fill:#e6ebf5; }
+    .muted { fill:#8b96ad; } .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    @keyframes prometheus { 0%,2.22% { opacity:0; transform:translateY(10px) } 8.89%,100% { opacity:1; transform:translateY(0) } } .prometheus { animation:prometheus 9.0s infinite; }
+    @keyframes alertmanager { 0%,6.67% { opacity:0; transform:translateY(10px) } 13.33%,100% { opacity:1; transform:translateY(0) } } .alertmanager { animation:alertmanager 9.0s infinite; }
+    @keyframes grafana { 0%,11.11% { opacity:0; transform:translateY(10px) } 17.78%,100% { opacity:1; transform:translateY(0) } } .grafana { animation:grafana 9.0s infinite; }
+    @keyframes apps { 0%,15.56% { opacity:0; transform:translateY(10px) } 22.22%,100% { opacity:1; transform:translateY(0) } } .apps { animation:apps 9.0s infinite; }
+    @keyframes cfg { 0%,20.00% { opacity:0; transform:translateY(10px) } 26.67%,100% { opacity:1; transform:translateY(0) } } .cfg { animation:cfg 9.0s infinite; }
+    @keyframes flow { 0% { stroke-dashoffset:40 } 100% { stroke-dashoffset:0 } } .flow { stroke-dasharray:6 6; animation: flow 1.2s linear infinite; }
+    @media (prefers-reduced-motion: reduce) { * { animation:none !important; opacity:1 !important; transform:none !important; } }
+  </style>
+  <rect width="960" height="400" rx="20" fill="#0f1420"/>
+  <text x="40" y="54" font-size="26" font-weight="800" style="fill:url(#title)">What's in the box</text>
+  <text x="42" y="80" font-size="14" class="muted">One <tspan class="mono">docker compose up</tspan> — the whole stack, pre-wired.</text>
+
+  <line class="flow" x1="200" y1="110" x2="770" y2="110" stroke="#2c3750" stroke-width="2"/>
+  <g class="prometheus"><rect x="40" y="120" width="250" height="118" rx="12" fill="#121a28" stroke="#e6522c" stroke-opacity=".55"/>
+  <circle cx="60" cy="146" r="5" fill="#e6522c"/>
+  <text x="76" y="151" font-size="15" font-weight="800">Prometheus</text>
+  <text x="272" y="151" text-anchor="end" font-size="11" class="mono muted">:9090</text>
+  <text x="58" y="182" font-size="11.5" class="muted"><tspan x="58" dy="0">scrapes targets, stores time-series,</tspan><tspan x="58" dy="18">evaluates alert rules</tspan></text></g>
+  <g class="alertmanager"><rect x="355" y="120" width="250" height="118" rx="12" fill="#121a28" stroke="#ff5c6e" stroke-opacity=".55"/>
+  <circle cx="375" cy="146" r="5" fill="#ff5c6e"/>
+  <text x="391" y="151" font-size="15" font-weight="800">Alertmanager</text>
+  <text x="587" y="151" text-anchor="end" font-size="11" class="mono muted">:9093</text>
+  <text x="373" y="182" font-size="11.5" class="muted"><tspan x="373" dy="0">routes &amp; dedupes firing alerts</tspan><tspan x="373" dy="18">to your receivers</tspan></text></g>
+  <g class="grafana"><rect x="670" y="120" width="250" height="118" rx="12" fill="#121a28" stroke="#f46800" stroke-opacity=".55"/>
+  <circle cx="690" cy="146" r="5" fill="#f46800"/>
+  <text x="706" y="151" font-size="15" font-weight="800">Grafana</text>
+  <text x="902" y="151" text-anchor="end" font-size="11" class="mono muted">:3000</text>
+  <text x="688" y="182" font-size="11.5" class="muted"><tspan x="688" dy="0">dashboards over the data —</tspan><tspan x="688" dy="18">datasource + panels provisioned</tspan></text></g>
+
+  <g class="apps"><rect x="40" y="262" width="565" height="98" rx="12" fill="#10151f" stroke="#2c3750"/>
+  <text x="58" y="288" font-size="12" font-weight="700" class="muted">EXAMPLE APPS — copy the pattern into your own service</text>
+  <text x="58" y="314" font-size="12" class="mono muted">examples/node-app/   · exposes /metrics (prom-client)</text>
+  <text x="58" y="336" font-size="12" class="mono muted">examples/python-app/ · exposes /metrics (prometheus_client)</text></g>
+
+  <g class="cfg"><rect x="625" y="262" width="295" height="98" rx="12" fill="#10151f" stroke="#2c3750"/>
+  <text x="643" y="288" font-size="12" font-weight="700" class="muted">PROVISIONED FROM THE REPO</text>
+  <text x="643" y="312" font-size="11.5" class="mono muted">prometheus.yml · alerts.yml</text>
+  <text x="643" y="332" font-size="11.5" class="mono muted">datasources/ · dashboards/</text>
+  <text x="643" y="352" font-size="11.5" class="mono muted">alertmanager/config.yml</text></g>
+</svg>
