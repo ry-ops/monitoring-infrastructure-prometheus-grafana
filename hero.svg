@@ -1,199 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
-  <defs>
-    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f172a"/>
-      <stop offset="100%" stop-color="#1e293b"/>
-    </linearGradient>
-
-    <linearGradient id="contour-gradient-1" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#38bdf8"/>
-      <stop offset="100%" stop-color="#7dd3fc"/>
-    </linearGradient>
-
-    <linearGradient id="contour-gradient-2" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#64748b"/>
-      <stop offset="100%" stop-color="#94a3b8"/>
-    </linearGradient>
-
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="4" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-  </defs>
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" width="960" height="400" role="img" aria-labelledby="t d">
+  <title id="t">Prometheus + Grafana: scrape, visualize, alert</title>
+  <desc id="d">Your apps expose a /metrics endpoint; Prometheus scrapes them on a schedule; Grafana charts the data and Alertmanager fires alerts when a threshold is crossed. A monitoring tutorial with a ready-to-run stack.</desc>
+  <defs><linearGradient id="title" x1="0" x2="1"><stop offset="0" stop-color="#e6522c"/><stop offset=".5" stop-color="#ff9f1c"/><stop offset="1" stop-color="#f46800"/></linearGradient></defs>
   <style>
-    @keyframes pulse-contour {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 0.7; }
-    }
-
-    @keyframes pulse-index {
-      0%, 100% { opacity: 0.6; }
-      50% { opacity: 1; }
-    }
-
-    @keyframes flow-data {
-      0% { transform: translateX(-100px); opacity: 0; }
-      50% { opacity: 1; }
-      100% { transform: translateX(1300px); opacity: 0; }
-    }
-
-    @keyframes pulse-node {
-      0%, 100% { transform: scale(1); opacity: 0.6; }
-      50% { transform: scale(1.2); opacity: 1; }
-    }
-
-    @keyframes ripple {
-      0% { r: 5; opacity: 0.8; }
-      100% { r: 40; opacity: 0; }
-    }
-
-    .contour-line {
-      fill: none;
-      stroke: url(#contour-gradient-2);
-      stroke-width: 1;
-      animation: pulse-contour 8s ease-in-out infinite;
-    }
-
-    .index-contour {
-      fill: none;
-      stroke: url(#contour-gradient-1);
-      stroke-width: 2.5;
-      animation: pulse-index 6s ease-in-out infinite;
-    }
-
-    .data-particle {
-      animation: flow-data 12s linear infinite;
-    }
-
-    .metric-node {
-      animation: pulse-node 4s ease-in-out infinite;
-    }
+    text { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; fill:#e6ebf5; }
+    .muted { fill:#8b96ad; } .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    @keyframes scrape { 0% { offset-distance:0%; opacity:0 } 10% {opacity:1} 45% { offset-distance:100%; opacity:1 } 55%,100% {opacity:0} } .scrape { animation: scrape 2.5s infinite; offset-path: path('M250 200 L 360 200'); }
+    @keyframes scrape2 { 0% { offset-distance:0%; opacity:0 } 10% {opacity:1} 45% { offset-distance:100%; opacity:1 } 55%,100% {opacity:0} } .scrape2 { animation: scrape2 2.5s .4s infinite; offset-path: path('M490 200 L 600 200'); }
+    @keyframes draw { 0% { stroke-dashoffset:320 } 60%,100% { stroke-dashoffset:0 } } .draw { stroke-dasharray:320; animation: draw 8.0s infinite; }
+    @keyframes alert { 0%,62.50% { opacity:0 } 66.88%,92.50% { opacity:1 } 96.25%,100% { opacity:0 } } .alert { animation:alert 8.0s infinite; }
+    @media (prefers-reduced-motion: reduce) { * { animation:none !important; } .draw { stroke-dashoffset:0 } }
   </style>
+  <rect width="960" height="400" rx="20" fill="#0f1420"/>
+  <text x="40" y="56" font-size="32" font-weight="800" style="fill:url(#title)">Prometheus + Grafana</text>
+  <text x="42" y="84" font-size="16" class="muted">Scrape metrics, chart them, and get alerted — a ready-to-run monitoring stack.</text>
 
-  <!-- Background -->
-  <rect width="1200" height="630" fill="url(#bg-gradient)"/>
+  <rect x="40" y="150" width="210" height="110" rx="10" fill="#161d2b" stroke="#2c3750"/>
+  <text x="56" y="174" font-size="11" font-weight="700" class="muted">YOUR APPS</text>
+  <text x="56" y="200" font-size="11.5" class="mono muted">node-app   /metrics</text>
+  <text x="56" y="222" font-size="11.5" class="mono muted">python-app /metrics</text>
+  <text x="56" y="244" font-size="11.5" class="mono muted">node exporters…</text>
 
-  <!-- Background grid pattern -->
-  <g opacity="0.08">
-    <line x1="0" y1="157" x2="1200" y2="157" stroke="#38bdf8" stroke-width="1"/>
-    <line x1="0" y1="315" x2="1200" y2="315" stroke="#38bdf8" stroke-width="1"/>
-    <line x1="0" y1="473" x2="1200" y2="473" stroke="#38bdf8" stroke-width="1"/>
-    <line x1="300" y1="0" x2="300" y2="630" stroke="#38bdf8" stroke-width="1"/>
-    <line x1="600" y1="0" x2="600" y2="630" stroke="#38bdf8" stroke-width="1"/>
-    <line x1="900" y1="0" x2="900" y2="630" stroke="#38bdf8" stroke-width="1"/>
-  </g>
+  <circle cx="420" cy="200" r="48" fill="#2a1710" stroke="#e6522c" stroke-width="2"/>
+  <text x="420" y="196" text-anchor="middle" font-size="12" font-weight="800">Prometheus</text>
+  <text x="420" y="214" text-anchor="middle" font-size="9.5" class="muted">scrapes + stores</text>
+  <line x1="250" y1="200" x2="360" y2="200" stroke="#2c3750" stroke-width="2" stroke-dasharray="3 5"/>
+  <circle class="scrape" r="5" fill="#e6522c"/>
+  <text x="305" y="190" text-anchor="middle" font-size="9" class="mono muted">scrape</text>
 
-  <!-- Topographic contour sets representing metrics/data peaks -->
-  <!-- Peak 1 - Left side -->
-  <g class="contour-set-1">
-    <!-- Intermediate contours -->
-    <ellipse class="contour-line" cx="250" cy="315" rx="180" ry="140" style="animation-delay: 0s"/>
-    <ellipse class="contour-line" cx="250" cy="315" rx="150" ry="115" style="animation-delay: -1s"/>
-    <ellipse class="contour-line" cx="250" cy="315" rx="120" ry="90" style="animation-delay: -2s"/>
-    <ellipse class="contour-line" cx="250" cy="315" rx="90" ry="68" style="animation-delay: -3s"/>
+  <rect x="600" y="150" width="320" height="140" rx="10" fill="#0b0f18" stroke="#f46800" stroke-opacity=".5"/>
+  <text x="616" y="172" font-size="12" font-weight="700" style="fill:#ffb27a">Grafana</text>
+  <text x="904" y="172" text-anchor="end" font-size="10" class="muted">system-overview</text>
+  <line x1="616" y1="278" x2="904" y2="278" stroke="#1d2636"/>
+  <polyline class="draw" points="620,252 648,242 676,238 704,242 732,251 760,261 788,266 816,263 844,254 872,210 900,238" fill="none" stroke="#ff9f1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <line x1="490" y1="200" x2="600" y2="200" stroke="#2c3750" stroke-width="2" stroke-dasharray="3 5"/>
+  <circle class="scrape2" r="5" fill="#f46800"/>
 
-    <!-- Index contour (every 5th) -->
-    <ellipse class="index-contour" cx="250" cy="315" rx="210" ry="165" style="animation-delay: 0.5s"/>
-
-    <!-- More intermediate -->
-    <ellipse class="contour-line" cx="250" cy="315" rx="60" ry="45" style="animation-delay: -4s"/>
-    <ellipse class="contour-line" cx="250" cy="315" rx="30" ry="23" style="animation-delay: -5s"/>
-  </g>
-
-  <!-- Peak 2 - Center -->
-  <g class="contour-set-2">
-    <ellipse class="contour-line" cx="600" cy="250" rx="200" ry="160" style="animation-delay: -0.5s"/>
-    <ellipse class="contour-line" cx="600" cy="250" rx="170" ry="135" style="animation-delay: -1.5s"/>
-    <ellipse class="contour-line" cx="600" cy="250" rx="140" ry="110" style="animation-delay: -2.5s"/>
-
-    <!-- Index contour -->
-    <ellipse class="index-contour" cx="600" cy="250" rx="230" ry="185" style="animation-delay: 1s"/>
-
-    <ellipse class="contour-line" cx="600" cy="250" rx="110" ry="85" style="animation-delay: -3.5s"/>
-    <ellipse class="contour-line" cx="600" cy="250" rx="80" ry="62" style="animation-delay: -4.5s"/>
-    <ellipse class="contour-line" cx="600" cy="250" rx="50" ry="38" style="animation-delay: -5.5s"/>
-  </g>
-
-  <!-- Peak 3 - Right side -->
-  <g class="contour-set-3">
-    <ellipse class="contour-line" cx="950" cy="380" rx="190" ry="145" style="animation-delay: -1s"/>
-    <ellipse class="contour-line" cx="950" cy="380" rx="160" ry="122" style="animation-delay: -2s"/>
-    <ellipse class="contour-line" cx="950" cy="380" rx="130" ry="98" style="animation-delay: -3s"/>
-    <ellipse class="contour-line" cx="950" cy="380" rx="100" ry="75" style="animation-delay: -4s"/>
-
-    <!-- Index contour -->
-    <ellipse class="index-contour" cx="950" cy="380" rx="220" ry="168" style="animation-delay: 1.5s"/>
-
-    <ellipse class="contour-line" cx="950" cy="380" rx="70" ry="53" style="animation-delay: -5s"/>
-    <ellipse class="contour-line" cx="950" cy="380" rx="40" ry="30" style="animation-delay: -6s"/>
-  </g>
-
-  <!-- Flowing data streams -->
-  <g class="data-streams">
-    <circle class="data-particle" cx="100" cy="200" r="4" fill="#38bdf8" opacity="0.8" style="animation-delay: 0s"/>
-    <circle class="data-particle" cx="150" cy="320" r="3" fill="#7dd3fc" opacity="0.7" style="animation-delay: -2s"/>
-    <circle class="data-particle" cx="80" cy="450" r="4" fill="#38bdf8" opacity="0.8" style="animation-delay: -4s"/>
-    <circle class="data-particle" cx="120" cy="180" r="3.5" fill="#94a3b8" opacity="0.6" style="animation-delay: -6s"/>
-    <circle class="data-particle" cx="90" cy="380" r="3" fill="#7dd3fc" opacity="0.7" style="animation-delay: -8s"/>
-    <circle class="data-particle" cx="110" cy="520" r="4" fill="#38bdf8" opacity="0.8" style="animation-delay: -10s"/>
-  </g>
-
-  <!-- Metric collection nodes -->
-  <g class="metric-nodes">
-    <circle class="metric-node" cx="250" cy="315" r="8" fill="#38bdf8" opacity="0.8" filter="url(#glow)" style="animation-delay: 0s"/>
-    <circle class="metric-node" cx="600" cy="250" r="8" fill="#7dd3fc" opacity="0.8" filter="url(#glow)" style="animation-delay: -1.3s"/>
-    <circle class="metric-node" cx="950" cy="380" r="8" fill="#38bdf8" opacity="0.8" filter="url(#glow)" style="animation-delay: -2.6s"/>
-
-    <!-- Additional monitoring points -->
-    <circle class="metric-node" cx="400" cy="420" r="6" fill="#94a3b8" opacity="0.6" style="animation-delay: -1s"/>
-    <circle class="metric-node" cx="750" cy="480" r="6" fill="#cbd5e1" opacity="0.6" style="animation-delay: -2s"/>
-    <circle class="metric-node" cx="500" cy="150" r="6" fill="#94a3b8" opacity="0.6" style="animation-delay: -3s"/>
-  </g>
-
-  <!-- Ripple effects from nodes -->
-  <g>
-    <circle cx="250" cy="315" r="5" fill="none" stroke="#38bdf8" stroke-width="2" opacity="0.8">
-      <animate attributeName="r" values="5;40" dur="3s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.8;0" dur="3s" repeatCount="indefinite"/>
-    </circle>
-    <circle cx="600" cy="250" r="5" fill="none" stroke="#7dd3fc" stroke-width="2" opacity="0.8">
-      <animate attributeName="r" values="5;40" dur="3s" repeatCount="indefinite" begin="1s"/>
-      <animate attributeName="opacity" values="0.8;0" dur="3s" repeatCount="indefinite" begin="1s"/>
-    </circle>
-    <circle cx="950" cy="380" r="5" fill="none" stroke="#38bdf8" stroke-width="2" opacity="0.8">
-      <animate attributeName="r" values="5;40" dur="3s" repeatCount="indefinite" begin="2s"/>
-      <animate attributeName="opacity" values="0.8;0" dur="3s" repeatCount="indefinite" begin="2s"/>
-    </circle>
-  </g>
-
-  <!-- Connection lines between monitoring points -->
-  <g opacity="0.2">
-    <line x1="250" y1="315" x2="600" y2="250" stroke="#38bdf8" stroke-width="2">
-      <animate attributeName="opacity" values="0.2;0.5;0.2" dur="5s" repeatCount="indefinite"/>
-    </line>
-    <line x1="600" y1="250" x2="950" y2="380" stroke="#7dd3fc" stroke-width="2">
-      <animate attributeName="opacity" values="0.2;0.5;0.2" dur="5s" repeatCount="indefinite" begin="1s"/>
-    </line>
-    <line x1="250" y1="315" x2="400" y2="420" stroke="#94a3b8" stroke-width="1.5">
-      <animate attributeName="opacity" values="0.2;0.4;0.2" dur="6s" repeatCount="indefinite"/>
-    </line>
-    <line x1="600" y1="250" x2="750" y2="480" stroke="#94a3b8" stroke-width="1.5">
-      <animate attributeName="opacity" values="0.2;0.4;0.2" dur="6s" repeatCount="indefinite" begin="2s"/>
-    </line>
-  </g>
-
-  <!-- Ambient glow spots -->
-  <circle cx="250" cy="315" r="100" fill="#38bdf8" opacity="0.03">
-    <animate attributeName="opacity" values="0.03;0.08;0.03" dur="8s" repeatCount="indefinite"/>
-  </circle>
-  <circle cx="600" cy="250" r="120" fill="#7dd3fc" opacity="0.03">
-    <animate attributeName="opacity" values="0.03;0.08;0.03" dur="9s" repeatCount="indefinite"/>
-  </circle>
-  <circle cx="950" cy="380" r="110" fill="#38bdf8" opacity="0.03">
-    <animate attributeName="opacity" values="0.03;0.08;0.03" dur="7s" repeatCount="indefinite"/>
-  </circle>
+  <g class="alert"><rect x="600" y="302" width="320" height="38" rx="10" fill="#2d1113" stroke="#ff5c6e"/><text x="616" y="326" font-size="12" font-weight="700" style="fill:#ff9ba3">🔔 Alertmanager · HighCPU firing</text></g>
+  <text x="40" y="322" font-size="12" class="muted">One <tspan class="mono">docker compose up</tspan> brings up Prometheus, Grafana</text>
+  <text x="40" y="342" font-size="12" class="muted">and Alertmanager, with the datasource and a dashboard provisioned.</text>
 </svg>
